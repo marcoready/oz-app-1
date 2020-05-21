@@ -1,7 +1,15 @@
 <template>
   <div id="app">
     <Navbar v-bind:account="account" />
-    <Balance v-bind:account="account" v-bind:balance="balance"  />
+    <div class="container-fluid mt-5">
+      <div class="row">
+        <main role="main" class="col-lg-12 ml-auto mr-auto " style="max-width:500px" >
+          <Balance v-bind:account="account" v-bind:balance="balance"  />
+          <BalanceForm v-on:load-balance-from-other-account="loadBalanceFromOtherAccount" />
+          <small><span v-if="{otherAccountBalance}">The balance for account {{ otherAccount }} is {{otherAccountBalance}}</span></small>
+        </main>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -10,11 +18,13 @@ import Web3 from 'web3';
 import Contract from '../build/contracts/MMToken.json'
 import Navbar from './components/Navbar'
 import Balance from "./components/Balance";
+import BalanceForm from "./components/BalanceForm";
 
 export default {
   name: 'App',
   components: {
       Balance,
+      BalanceForm,
       Navbar
   },
     data() {
@@ -22,7 +32,10 @@ export default {
             web3: null,
             account: '',
             contract: null,
-            balance: ''
+            balance: '',
+            symbol: '',
+            otherAccount: '',
+            otherAccountBalance: ''
         }
     },
   methods: {
@@ -52,6 +65,7 @@ export default {
               const contract = new web3.eth.Contract(Contract.abi, networkData.address)
               // Set Contract in state
               this.contract = contract
+              await this.loadCurrencySymbol()
                // await this.loadEthBalance()
                await this.loadBalance()
 
@@ -67,7 +81,16 @@ export default {
       async loadBalance() {
           console.log(this.contract)
           const _balance = await this.contract.methods.balanceOf(this.account).call({ from: this.account });
-          this.balance = Web3.utils.fromWei(_balance);
+          this.balance = Web3.utils.fromWei(_balance) + ' '  + this.symbol;
+      },
+      async loadBalanceFromOtherAccount(accountToCheck) {
+           const _balance = await this.contract.methods.balanceOf(accountToCheck.account).call({ from: accountToCheck.account });
+           this.otherAccount =  accountToCheck.account;
+           this.otherAccountBalance =  Web3.utils.fromWei(_balance) + ' '  + this.symbol;
+      },
+      async loadCurrencySymbol() {
+          const _symbol = await this.contract.methods.symbol().call()
+          this.symbol = _symbol
       }
   },
     mounted() {
