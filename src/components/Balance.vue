@@ -1,5 +1,5 @@
 <template>
-  <div class="card mt-5 ml-1" style="max-width: 40rem;">
+  <div class="card mt-5">
     <div class="card-header">
       {{account}}
     </div>
