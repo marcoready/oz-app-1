@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Navbar v-bind:account="account" />
-    <p>Your balance is {{balance}}</p>
+    <Balance v-bind:account="account" v-bind:balance="balance"  />
   </div>
 </template>
 
@@ -9,11 +9,12 @@
 import Web3 from 'web3';
 import Contract from '../build/contracts/MMToken.json'
 import Navbar from './components/Navbar'
+import Balance from "./components/Balance";
 
 export default {
   name: 'App',
-  // props: ["account", ],
   components: {
+      Balance,
       Navbar
   },
     data() {
@@ -51,11 +52,8 @@ export default {
               const contract = new web3.eth.Contract(Contract.abi, networkData.address)
               // Set Contract in state
               this.contract = contract
-               await this.loadEthBalance()
-              //  await this.loadBalance()
-              // this.contract.methods.getBalanceOf(this.account).call({ from: this.account }).then((error, balance) => {
-              //     this.accounts = balance;
-              // });
+               // await this.loadEthBalance()
+               await this.loadBalance()
 
           } else {
               window.alert('SocialNetwork contract not deployed to detected network.')
@@ -68,9 +66,8 @@ export default {
       },
       async loadBalance() {
           console.log(this.contract)
-          const _ethBalance = await this.contract.methods.getBalanceOf(this.account).call({ from: this.account });
-          const readableEthBalance = Web3.utils.fromWei(_ethBalance);
-          this.balance = readableEthBalance;
+          const _balance = await this.contract.methods.balanceOf(this.account).call({ from: this.account });
+          this.balance = Web3.utils.fromWei(_balance);
       }
   },
     mounted() {
@@ -80,13 +77,4 @@ export default {
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>

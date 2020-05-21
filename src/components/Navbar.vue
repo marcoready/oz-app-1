@@ -24,7 +24,8 @@
 </template>
 
 <script>
-     import Identicon from 'identicon.js';
+    import Identicon from 'identicon.js';
+
     export default {
         name: 'Navbar',
         props: ["account"],

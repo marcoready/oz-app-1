@@ -5,6 +5,9 @@
 npm install
 ```
 
+### Pre-requirements
+Blockchain wallet in browser ( e.g Metamask(https://metamask.io/) )
+
 ### Compiles OpenZeppelin Contracts
 ```
 npx oz compile
