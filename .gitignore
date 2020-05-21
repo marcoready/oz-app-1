@@ -2,7 +2,10 @@
 node_modules
 /dist
 /build
+.openzeppelin/.lock
+.openzeppelin/.session
 /public
+
 .secrets.json
 
 # local env files

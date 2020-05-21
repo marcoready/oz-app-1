@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import Web3 from 'web3';
-import Contract from '../build/contracts/MMToken.json'
-import Navbar from './components/Navbar'
-import Balance from "./components/Balance";
-import BalanceForm from "./components/BalanceForm";
+    import Web3 from 'web3';
+    import Contract from '../build/contracts/MMToken.json'
+    import Navbar from './components/Navbar'
+    import Balance from "./components/Balance";
+    import BalanceForm from "./components/BalanceForm";
 
-export default {
+    export default {
   name: 'App',
   components: {
       Balance,
@@ -66,17 +66,11 @@ export default {
               // Set Contract in state
               this.contract = contract
               await this.loadCurrencySymbol()
-               // await this.loadEthBalance()
                await this.loadBalance()
-
+              await this.loadAccountHistory()
           } else {
               window.alert('SocialNetwork contract not deployed to detected network.')
           }
-      },
-      async loadEthBalance() {
-          const _ethBalance = await this.web3.eth.getBalance(this.account);
-          const readableEthBalance = Web3.utils.fromWei(_ethBalance);
-          this.balance = readableEthBalance;
       },
       async loadBalance() {
           console.log(this.contract)
@@ -89,8 +83,13 @@ export default {
            this.otherAccountBalance =  Web3.utils.fromWei(_balance) + ' '  + this.symbol;
       },
       async loadCurrencySymbol() {
-          const _symbol = await this.contract.methods.symbol().call()
-          this.symbol = _symbol
+          this.symbol = await this.contract.methods.symbol().call()
+      },
+      async loadAccountHistory() {
+          const receivedTransferEvents = await this.contract.getPastEvents('Transfer', { filter: { to: this.account } })
+          console.log(receivedTransferEvents)
+          const sentTransfersEvents = await this.contract.getPastEvents('Transfer', { filter: { from: this.account } })
+          console.log(sentTransfersEvents)
       }
   },
     mounted() {
