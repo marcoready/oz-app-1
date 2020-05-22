@@ -6,11 +6,11 @@ npm install
 ```
 
 ### Pre-requirements
-Blockchain wallet in browser [e.g Metamask](https://metamask.io/).
-Local Blockchain for develop [Ganache](https://www.trufflesuite.com/ganache)
-To deploy to other blockchain networks you will need an infura account to connect
-[Infura](https://infura.io/) register and create a project
-Create a .secrets.json (see ./secrets.dist.json)
+* Blockchain wallet in browser [e.g Metamask](https://metamask.io/).
+* Local Blockchain for develop [Ganache](https://www.trufflesuite.com/ganache)
+* To deploy to other blockchain networks you will need an infura account to connect
+* Go to [Infura](https://infura.io/) register and create a project
+* Create a .secrets.json (see ./secrets.dist.json)
 
 ### Compiles OpenZeppelin Contracts
 ```
@@ -39,3 +39,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+### Openzepplin documentation
+See [Openzepplin](https://docs.openzeppelin.com/)
