@@ -32,10 +32,8 @@
                 const accountToCheck = {
                     account: this.otherAccount
                 };
-                // this.$emit('load-balance-from-other-account', accountToCheck)
                 await this.loadBalanceFromOtherAccount(accountToCheck)
                 this.showBalance = true
-                console.log("submit")
             },
             async loadBalanceFromOtherAccount(accountToCheck) {
                 const _balance = await this.contract.methods.balanceOf(accountToCheck.account).call({ from: accountToCheck.account });
