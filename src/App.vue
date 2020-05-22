@@ -7,6 +7,7 @@
           <Balance :accountInfo="{ account: account, balance: balance }" />
           <AccountHistory v-bind:receivedTransfers="receivedTransfers" v-bind:sentTransfers="sentTransfers" />
           <BalanceForm :contract="contract" />
+          <TransferForm :contract="contract" :fromAccount="account" />
         </main>
       </div>
     </div>
@@ -20,10 +21,12 @@
     import Balance from "./components/Balance";
     import BalanceForm from "./components/BalanceForm";
     import AccountHistory from "./components/AccountHistory";
+    import TransferForm from "./components/TransferForm";
 
     export default {
   name: 'App',
   components: {
+      TransferForm,
       AccountHistory,
       Balance,
       BalanceForm,
