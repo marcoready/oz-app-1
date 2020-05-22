@@ -11,6 +11,9 @@
     "test": "oz compile && mocha --exit --recursive test"
   },
   "dependencies": {
+    "@openzeppelin/cli": "^2.8.2",
+    "@openzeppelin/contracts-ethereum-package": "^3.0.0",
+    "@openzeppelin/test-helpers": "^0.5.5",
     "babel-eslint": "^10.1.0",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
@@ -19,8 +22,6 @@
     "babel-preset-stage-3": "6.24.1",
     "babel-register": "6.26.0",
     "bootstrap": "4.3.1",
-    "@openzeppelin/cli": "^2.8.2",
-    "@openzeppelin/contracts-ethereum-package": "^3.0.0",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
     "web3": "^1.2.7"
