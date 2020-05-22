@@ -3,8 +3,9 @@
     <Navbar v-bind:account="account" />
     <div class="container-fluid mt-5">
       <div class="row">
-        <main role="main" class="col-lg-12 ml-auto mr-auto " style="max-width:500px" >
+        <main role="main" class="col-lg-12 ml-auto mr-auto " style="max-width:1000px" >
           <Balance v-bind:account="account" v-bind:balance="balance"  />
+          <AccountHistory v-bind:receivedTransfers="receivedTransfers" v-bind:sentTransfers="sentTransfers" />
           <BalanceForm v-on:load-balance-from-other-account="loadBalanceFromOtherAccount" />
           <small><span v-if="{otherAccountBalance}">The balance for account {{ otherAccount }} is {{otherAccountBalance}}</span></small>
         </main>
@@ -19,10 +20,12 @@
     import Navbar from './components/Navbar'
     import Balance from "./components/Balance";
     import BalanceForm from "./components/BalanceForm";
+    import AccountHistory from "./components/AccountHistory";
 
     export default {
   name: 'App',
   components: {
+      AccountHistory,
       Balance,
       BalanceForm,
       Navbar
@@ -35,7 +38,9 @@
             balance: '',
             symbol: '',
             otherAccount: '',
-            otherAccountBalance: ''
+            otherAccountBalance: '',
+            receivedTransfers: [],
+            sentTransfers: []
         }
     },
   methods: {
@@ -86,10 +91,20 @@
           this.symbol = await this.contract.methods.symbol().call()
       },
       async loadAccountHistory() {
-          const receivedTransferEvents = await this.contract.getPastEvents('Transfer', { filter: { to: this.account } })
+          const receivedTransferEvents = await this.contract.getPastEvents('Transfer', {
+              filter: { to: this.account },
+              fromBlock: 0,
+              toBlock: 'latest'
+          })
           console.log(receivedTransferEvents)
-          const sentTransfersEvents = await this.contract.getPastEvents('Transfer', { filter: { from: this.account } })
+          this.receivedTransfers = receivedTransferEvents
+          const sentTransfersEvents = await this.contract.getPastEvents('Transfer', {
+              filter: { from: this.account },
+              fromBlock: 0,
+              toBlock: 'latest'
+          })
           console.log(sentTransfersEvents)
+          this.sentTransfers = sentTransfersEvents
       }
   },
     mounted() {
