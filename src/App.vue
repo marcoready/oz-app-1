@@ -4,10 +4,14 @@
     <div class="container-fluid mt-5">
       <div class="row">
         <main role="main" class="col-lg-12 ml-auto mr-auto " style="max-width:1000px" >
-          <Balance :accountInfo="{ account: account, balance: balance }" />
-          <AccountHistory v-bind:receivedTransfers="receivedTransfers" v-bind:sentTransfers="sentTransfers" />
-          <BalanceForm :contract="contract" />
-          <TransferForm :contract="contract" :fromAccount="account" />
+          <div v-if="contract">
+            <Balance :account="account" :contract="contract" :symbol="symbol" />
+            <AccountHistory :account="account" :contract="contract" />
+            <BalanceForm :contract="contract" />
+            <TransferForm :contract="contract" :fromAccount="account" />
+            <UserCount :contract="contract" />
+            <RegisterUser :contract="contract" :account="account" />
+          </div>
         </main>
       </div>
     </div>
@@ -22,10 +26,14 @@
     import BalanceForm from "./components/BalanceForm";
     import AccountHistory from "./components/AccountHistory";
     import TransferForm from "./components/TransferForm";
+    import UserCount from "./components/UserCount";
+    import RegisterUser from "./components/RegisterUser";
 
     export default {
   name: 'App',
   components: {
+      RegisterUser,
+      UserCount,
       TransferForm,
       AccountHistory,
       Balance,
@@ -37,12 +45,7 @@
             web3: null,
             account: '',
             contract: null,
-            balance: '',
-            symbol: '',
-            otherAccount: '',
-            otherAccountBalance: null,
-            receivedTransfers: [],
-            sentTransfers: []
+            symbol: ''
         }
     },
   methods: {
@@ -69,41 +72,15 @@
            const networkId = await web3.eth.net.getId()
            const networkData = Contract.networks[networkId]
           if(networkData) {
-              const contract = new web3.eth.Contract(Contract.abi, networkData.address)
-              // Set Contract in state
-              this.contract = contract
+              this.contract = new web3.eth.Contract(Contract.abi, networkData.address)
               await this.loadCurrencySymbol()
-               await this.loadBalance()
-              await this.loadAccountHistory()
           } else {
               window.alert('SocialNetwork contract not deployed to detected network.')
           }
       },
-      async loadBalance() {
-          console.log(this.contract)
-          const _balance = await this.contract.methods.balanceOf(this.account).call({ from: this.account });
-          this.balance = Web3.utils.fromWei(_balance) + ' '  + this.symbol;
-      },
-
       async loadCurrencySymbol() {
           this.symbol = await this.contract.methods.symbol().call()
       },
-      async loadAccountHistory() {
-          const receivedTransferEvents = await this.contract.getPastEvents('Transfer', {
-              filter: { to: this.account },
-              fromBlock: 0,
-              toBlock: 'latest'
-          })
-          console.log(receivedTransferEvents)
-          this.receivedTransfers = receivedTransferEvents
-          const sentTransfersEvents = await this.contract.getPastEvents('Transfer', {
-              filter: { from: this.account },
-              fromBlock: 0,
-              toBlock: 'latest'
-          })
-          console.log(sentTransfersEvents)
-          this.sentTransfers = sentTransfersEvents
-      }
   },
     mounted() {
         this.loadWeb3()
