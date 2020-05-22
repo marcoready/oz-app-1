@@ -17,6 +17,7 @@ contract MMToken is ERC20PresetMinterPauserUpgradeSafe {
     );
 
     function registerUser() public {
+        // TODO: check if is not registered already
         userCount++;
         User memory user = User(userCount, msg.sender);
         users[userCount] = user;

@@ -36,11 +36,34 @@
     import Web3 from 'web3';
     export default {
         name: 'AccountHistory',
-        props: ["receivedTransfers","sentTransfers"],
+        props: ["account","contract"],
+        data(){
+            return {
+                receivedTransfers: null,
+                sentTransfers: null
+            }
+        },
         methods: {
-           getValue(value) {
-               return Web3.utils.fromWei(value)
-           }
+          async loadAccountHistory() {
+              const receivedTransferEvents = await this.contract.getPastEvents('Transfer', {
+                  filter: { to: this.account },
+                  fromBlock: 0,
+                  toBlock: 'latest'
+              })
+              this.receivedTransfers = receivedTransferEvents
+              const sentTransfersEvents = await this.contract.getPastEvents('Transfer', {
+                  filter: { from: this.account },
+                  fromBlock: 0,
+                  toBlock: 'latest'
+              })
+              this.sentTransfers = sentTransfersEvents
+          },
+          getValue(value) {
+              return Web3.utils.fromWei(value)
+          }
+        },
+        mounted() {
+            this.loadAccountHistory()
         }
     }
 </script>
