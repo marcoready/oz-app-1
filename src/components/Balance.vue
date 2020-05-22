@@ -1,10 +1,10 @@
 <template>
   <div class="card mt-5">
     <div class="card-header">
-      {{account}}
+      {{accountInfo.account}}
     </div>
     <ul class="list-group list-group-flush">
-      <li class="list-group-item"><small class="text-secondary">Your balance is {{balance}} </small></li>
+      <li class="list-group-item"><small class="text-secondary">Your balance is {{accountInfo.balance}} </small></li>
     </ul>
   </div>
 </template>
@@ -13,7 +13,7 @@
 
     export default {
         name: 'Balance',
-        props: ["account","balance"],
+        props: ["accountInfo"],
     }
 </script>
 

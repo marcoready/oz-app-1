@@ -4,10 +4,9 @@
     <div class="container-fluid mt-5">
       <div class="row">
         <main role="main" class="col-lg-12 ml-auto mr-auto " style="max-width:1000px" >
-          <Balance v-bind:account="account" v-bind:balance="balance"  />
+          <Balance :accountInfo="{ account: account, balance: balance }" />
           <AccountHistory v-bind:receivedTransfers="receivedTransfers" v-bind:sentTransfers="sentTransfers" />
-          <BalanceForm v-on:load-balance-from-other-account="loadBalanceFromOtherAccount" />
-          <small><span v-if="{otherAccountBalance}">The balance for account {{ otherAccount }} is {{otherAccountBalance}}</span></small>
+          <BalanceForm :contract="contract" />
         </main>
       </div>
     </div>
@@ -38,7 +37,7 @@
             balance: '',
             symbol: '',
             otherAccount: '',
-            otherAccountBalance: '',
+            otherAccountBalance: null,
             receivedTransfers: [],
             sentTransfers: []
         }
@@ -82,11 +81,7 @@
           const _balance = await this.contract.methods.balanceOf(this.account).call({ from: this.account });
           this.balance = Web3.utils.fromWei(_balance) + ' '  + this.symbol;
       },
-      async loadBalanceFromOtherAccount(accountToCheck) {
-           const _balance = await this.contract.methods.balanceOf(accountToCheck.account).call({ from: accountToCheck.account });
-           this.otherAccount =  accountToCheck.account;
-           this.otherAccountBalance =  Web3.utils.fromWei(_balance) + ' '  + this.symbol;
-      },
+
       async loadCurrencySymbol() {
           this.symbol = await this.contract.methods.symbol().call()
       },
